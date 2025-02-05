@@ -1,28 +1,22 @@
-package org.example.mySqlService;
+package org.example.PostgreSqlService;
 
 import java.sql.*;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class Utils {
 
-    /**
-     * SSL, ou Secure Sockets Layer, é um protocolo de segurança que estabelece uma conexão criptografada entre um servidor web e um navegador.
-     * Desenvolvido pela Netscape em 1995, o SSL foi criado para garantir a privacidade, autenticidade e integridade dos dados transmitidos na internet,
-     * especialmente durante transações que envolvem informações sensíveis, como dados pessoais e financeiros
-     */
-
-    static Scanner tec = new Scanner(System.in);
+    static Scanner teclado = new Scanner(System.in);
 
     public static Connection conectar(){
-        String CLASSE_DRIVER = "com.mysql.jdbc.Driver";
-        String USUARIO = "Kerbino";
-        String SENHA = "1234";
-        String URL_SERVIDOR = "jdbc:mysql://localhost:3306/jmysql?useSSL=false";
-
+        Properties props = new Properties();
+        props.setProperty("user", "kerbino");
+        props.setProperty("password", "1234");
+        props.setProperty("ssl", "false");
+        String URL_SERVIDOR = "jdbc:postgresql://localhost:5432/jpostgresql";
         try {
-            Class.forName(CLASSE_DRIVER);
-            return DriverManager.getConnection(URL_SERVIDOR, USUARIO, SENHA);
-        } catch (ClassNotFoundException | SQLException e) {
+            return DriverManager.getConnection(URL_SERVIDOR, props);
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -42,7 +36,11 @@ public class Utils {
 
         try {
             Connection conn = conectar();
-            PreparedStatement produtos = conn.prepareStatement(BUSCAR_TODOS);
+            PreparedStatement produtos = conn.prepareStatement(
+                    BUSCAR_TODOS,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
             ResultSet res = produtos.executeQuery();
 
             // não tem como saber quantos resultados foram encontrados.
@@ -76,19 +74,23 @@ public class Utils {
 
     public static void inserir () {
         System.out.println("Informe o nome do produto: ");
-        String nome = tec.nextLine();
+        String nome = teclado.nextLine();
 
         System.out.println("Informe o preço do produto: ");
-        float preco = tec.nextFloat();
+        float preco = teclado.nextFloat();
 
         System.out.println("Informe a quantidade em estoque: ");
-        int estoque = tec.nextInt();
+        int estoque = teclado.nextInt();
 
         String INSERIR = "INSERT INTO produtos (nome, preco, estoque) VALUES (?, ?, ?)";
         //Prevenção de SQL Injection
         try {
             Connection conn = conectar();
-            PreparedStatement salvar = conn.prepareStatement(INSERIR);
+            PreparedStatement salvar = conn.prepareStatement(
+                    INSERIR,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
 
             salvar.setString(1, nome);
             salvar.setFloat(2, preco);
@@ -106,13 +108,17 @@ public class Utils {
 
     public static void atualizar() {
         System.out.println("Informe o código do produto: ");
-        int id = Integer.parseInt(tec.nextLine());
+        int id = Integer.parseInt(teclado.nextLine());
 
         String BUSCAR_POR_ID = "SELECT * FROM produtos WHERE id=?";
 
         try {
             Connection conn = conectar();
-            PreparedStatement produto = conn.prepareStatement(BUSCAR_POR_ID);
+            PreparedStatement produto = conn.prepareStatement(
+                    BUSCAR_POR_ID,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
             produto.setInt(1, id);
             ResultSet res = produto.executeQuery();
 
@@ -121,14 +127,14 @@ public class Utils {
             res.beforeFirst();
 
             if (qtd > 0) {
-                System.out.println("Informe o nome do produto: ");
-                String nome = tec.nextLine();
+                System.out.println("Informe o nome do novo produto: ");
+                String nome = teclado.nextLine();
 
-                System.out.println("Informe o preço do produto: ");
-                float preco = tec.nextFloat();
+                System.out.println("Informe o preço do novo produto: ");
+                float preco = teclado.nextFloat();
 
                 System.out.println("Informe a quantidade em estoque: ");
-                int estoque = tec.nextInt();
+                int estoque = teclado.nextInt();
 
                 String ATUALIZAR = "UPDATE produtos SET nome=?, preco=?, estoque=? WHERE id=?";
                 PreparedStatement upd = conn.prepareStatement(ATUALIZAR);
@@ -153,7 +159,7 @@ public class Utils {
 
     public static void deletar() {
         System.out.println("Informe o código do produto: ");
-        int id = Integer.parseInt(tec.nextLine());
+        int id = Integer.parseInt(teclado.nextLine());
 
         String DELETAR_POR_ID = "DELETE FROM produtos WHERE id=?";
         String BUSCAR_POR_ID = "SELECT * FROM produtos WHERE id=?";
@@ -161,7 +167,11 @@ public class Utils {
         System.out.println("Informe o código do produto: ");
         try {
             Connection conn = conectar();
-            PreparedStatement produto = conn.prepareStatement(BUSCAR_POR_ID);
+            PreparedStatement produto = conn.prepareStatement(
+                    BUSCAR_POR_ID,
+                    ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_READ_ONLY
+            );
             produto.setInt(1, id);
             ResultSet res = produto.executeQuery();
 
@@ -186,14 +196,14 @@ public class Utils {
 
     }
 
-    public static void menuMySql() {
+    public static void menuPostgreSql() {
         System.out.println("==============Gerenciamento de produtos==================");
         System.out.println("Selecione uma opção: ");
         System.out.println("1 - Listar opções");
         System.out.println("2 - Inserir produtos");
         System.out.println("3 - Atualizar produtos");
         System.out.println("4 - Deletar produtos");
-        int input = Integer.parseInt(tec.nextLine());
+        int input = Integer.parseInt(teclado.nextLine());
 
         switch (input) {
             case 1:
