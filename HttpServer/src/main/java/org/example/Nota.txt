@@ -1,0 +1,23 @@
+
+A requisição HTTP funciona como um protocolo de comunicação entre um cliente e um servidor.
+O cliente, geralmente um navegador, envia uma requisição HTTP ao servidor, que processa a
+solicitação e retorna uma resposta. O processo básico é o seguinte:
+
+1. Método HTTP: O cliente especifica um método (GET, POST, PUT, DELETE, etc.) que indica
+a ação desejada. Por exemplo, um método GET é usado para solicitar dados, enquanto um
+método POST é usado para enviar dados ao servidor.
+
+2. URL: A requisição inclui uma URL (Uniform Resource Locator) que indica o recurso
+desejado no servidor. A URL é composta pelo protocolo (http ou https), domínio,
+caminho e, opcionalmente, parâmetros de consulta.
+
+3. Cabeçalhos: A requisição pode incluir cabeçalhos que fornecem informações adicionais,
+como tipo de conteúdo, autenticação e preferências do cliente.
+
+4. Corpo da Requisição: Para métodos como POST e PUT, a requisição pode incluir um corpo
+que contém os dados a serem enviados ao servidor.
+
+5. Resposta do Servidor: O servidor processa a requisição e envia uma resposta, que
+inclui um código de status (como 200 para sucesso, 404 para não encontrado, etc.),
+cabeçalhos e, opcionalmente, um corpo com os dados solicitados.
+Esse ciclo de requisição e resposta é fundamental para a comunicação na web.

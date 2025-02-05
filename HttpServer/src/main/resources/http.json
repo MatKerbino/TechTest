@@ -1,0 +1,13 @@
+{
+    "server": {
+        "port": 8080,
+        "webroot": "/var/www"
+    },
+    "endpoints": [
+        {
+            "path": "/example",
+            "method": "GET",
+            "handler": "ExampleHandler"
+        }
+    ]
+}
