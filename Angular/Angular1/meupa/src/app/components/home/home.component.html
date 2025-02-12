@@ -1,0 +1,23 @@
+<p>Eu vou me mudar!</p>
+<button [id]="button"></button>
+<button [attr.aria-label]="ariaArio"></button>
+<button (click)="morte">morte</button>
+<button (click)="submit($event)">POIS TOME!</button>
+
+<h1>{{arroba}}</h1>
+<h1>{{minhaPropsDeFora}}</h1>
+
+@if (estranho){
+    <p>Vosse ta muy estranho</p>
+} @else {
+    <p>Vosse pareceu bem</p>
+}
+
+<!--
+    o track vai indicar para o angular como ele deve iterar cada objeto
+    na lista para saber quando um novo objeto foi adicionado, alterado ou removido.
+    Isso é semelhante à renderização por map() do react. 
+-->
+@for(item of listOfItems; track item.id) {
+    <p>{{item.name}}</p>
+}
