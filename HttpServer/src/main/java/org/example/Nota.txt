@@ -1,23 +1,88 @@
+O código apresentado exemplifica um servidor HTTP simples em Java, demonstrando
+conceitos essenciais de comunicação via protocolo HTTP e manipulação de conexões
+via sockets. Em termos gerais, a requisição HTTP funciona como um protocolo de
+comunicação entre um cliente e um servidor. O cliente – geralmente um navegador –
+envia uma requisição HTTP ao servidor, que processa a solicitação e retorna uma
+resposta. Esse ciclo de requisição e resposta é fundamental para a comunicação na web.
 
-A requisição HTTP funciona como um protocolo de comunicação entre um cliente e um servidor.
-O cliente, geralmente um navegador, envia uma requisição HTTP ao servidor, que processa a
-solicitação e retorna uma resposta. O processo básico é o seguinte:
+1. Bloco try-catch:
+   - O bloco try agrupa as operações de I/O e garante que, em caso de erro,
+     a exceção seja capturada no catch, evitando falhas silenciosas.
+   - O catch captura exceções do tipo IOException, imprime o stack trace
+     e relança a exceção como RuntimeException.
 
-1. Método HTTP: O cliente especifica um método (GET, POST, PUT, DELETE, etc.) que indica
-a ação desejada. Por exemplo, um método GET é usado para solicitar dados, enquanto um
-método POST é usado para enviar dados ao servidor.
+2. Criação do ServerSocket:
+   - "ServerSocket serverSocket = new ServerSocket(conf.getPort());"
+   - Cria um servidor que escuta conexões na porta especificada (por exemplo, 8080).
 
-2. URL: A requisição inclui uma URL (Uniform Resource Locator) que indica o recurso
-desejado no servidor. A URL é composta pelo protocolo (http ou https), domínio,
-caminho e, opcionalmente, parâmetros de consulta.
+3. Aceitação de Conexão:
+   - "Socket socket = serverSocket.accept();"
+   - Aguarda (de forma bloqueante) a conexão de um cliente e retorna um objeto
+     Socket representando essa conexão.
 
-3. Cabeçalhos: A requisição pode incluir cabeçalhos que fornecem informações adicionais,
-como tipo de conteúdo, autenticação e preferências do cliente.
+4. Fluxos de Entrada e Saída:
+   - "InputStream inputStream = socket.getInputStream();"
+     Permite ler os dados enviados pelo cliente.
+   - "OutputStream outputStream = socket.getOutputStream();"
+     Permite enviar dados (a resposta) para o cliente.
 
-4. Corpo da Requisição: Para métodos como POST e PUT, a requisição pode incluir um corpo
-que contém os dados a serem enviados ao servidor.
+5. Construção do Conteúdo HTML:
+   - Define uma String com o conteúdo HTML que será enviado como resposta.
 
-5. Resposta do Servidor: O servidor processa a requisição e envia uma resposta, que
-inclui um código de status (como 200 para sucesso, 404 para não encontrado, etc.),
-cabeçalhos e, opcionalmente, um corpo com os dados solicitados.
-Esse ciclo de requisição e resposta é fundamental para a comunicação na web.
+6. Definição do CRLF:
+   - "final String CRLF = "\n\r";"
+   - CRLF (Carriage Return e Line Feed) é usado para separar as linhas de cabeçalhos
+     na resposta HTTP. A sequência correta é "\r\n", mas o exemplo utiliza "\n\r".
+
+7. Montagem da Resposta HTTP:
+   - A resposta é montada concatenando:
+       • Linha de status: "HTTP/1.1 200 OK", que indica sucesso.
+       • Cabeçalho Content-Length: Informa o tamanho do conteúdo HTML.
+       • Uma linha em branco que separa os cabeçalhos do corpo.
+       • O corpo da resposta, contendo o HTML.
+   - A resposta final é enviada ao cliente através do OutputStream.
+
+8. Envio da Resposta:
+   - "outputStream.write(response.getBytes());"
+   - Converte a resposta para bytes e envia através do OutputStream.
+
+9. Fechamento dos Recursos:
+   - Os fluxos de entrada/saída, o socket e o serverSocket são fechados,
+     liberando os recursos utilizados.
+
+------------------------------------------------------------
+
+Funcionamento Geral da Requisição HTTP:
+---------------------------------------
+A requisição HTTP funciona como um protocolo de comunicação entre
+um cliente e um servidor. O processo básico inclui:
+
+1. Método HTTP:
+   - O cliente especifica um método (GET, POST, PUT, DELETE, etc.) que indica
+     a ação desejada.
+   - Exemplo: GET para solicitar dados, POST para enviar dados.
+
+2. URL:
+   - A requisição inclui uma URL (Uniform Resource Locator) que identifica o
+     recurso desejado no servidor. A URL é composta pelo protocolo (http ou https),
+     domínio, caminho e, opcionalmente, parâmetros de consulta.
+
+3. Cabeçalhos:
+   - Informações adicionais são enviadas através dos cabeçalhos, como tipo de
+     conteúdo, autenticação e preferências do cliente.
+
+4. Corpo da Requisição:
+   - Em métodos como POST e PUT, a requisição pode incluir um corpo com os
+     dados a serem enviados ao servidor.
+
+5. Resposta do Servidor:
+   - Após processar a requisição, o servidor retorna uma resposta que inclui um
+     código de status (como 200 para sucesso ou 404 para não encontrado), cabeçalhos
+     e, opcionalmente, um corpo com os dados solicitados.
+
+------------------------------------------------------------
+
+Portanto, o código ilustra, de forma prática, como um servidor pode receber
+uma requisição, processá-la e responder utilizando os conceitos fundamentais do
+protocolo HTTP, ao mesmo tempo em que demonstra a utilização de sockets, fluxos de
+dados e o formato esperado para uma resposta HTTP.
