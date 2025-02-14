@@ -1,6 +1,4 @@
-O código apresentado exemplifica um servidor HTTP simples em Java, demonstrando
-conceitos essenciais de comunicação via protocolo HTTP e manipulação de conexões
-via sockets. Em termos gerais, a requisição HTTP funciona como um protocolo de
+Em termos gerais, a requisição HTTP funciona como um protocolo de
 comunicação entre um cliente e um servidor. O cliente – geralmente um navegador –
 envia uma requisição HTTP ao servidor, que processa a solicitação e retorna uma
 resposta. Esse ciclo de requisição e resposta é fundamental para a comunicação na web.
